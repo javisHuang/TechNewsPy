@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <script src="jquery-3.6.0.min.js"></script>
+</head>
+<script>
+function getData(){
+	pywebview.api.getData().then(function(response) {
+		response.datarows.forEach(element => {
+			$("#article").append("<tr><td><a href='"+element.href+"' target='_blank'>"+element.title+"</a></td></tr>");
+		});
+	});
+}
+</script>
+<body>
+	<button onClick="getData()">getdata</button><br/>
+	<table id="article">
+		<tr>
+			<td>item</td>
+		</tr>
+	</table>
+</body>
+</html>
