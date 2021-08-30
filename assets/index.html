@@ -2,23 +2,57 @@
 <html>
 <head>
   <meta charset="utf-8"/>
-  <script src="jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <script src="bootstrap.min.js"></script>
+  <script src="jquery-3.2.1.slim.min.js"></script>
+  <script src="popper.min.js"></script>
 </head>
 <script>
 function getData(){
 	pywebview.api.getData().then(function(response) {
-		response.datarows.forEach(element => {
-			$("#article").append("<tr><td><a href='"+element.href+"' target='_blank'>"+element.title+"</a></td></tr>");
-		});
+		for (let i = 0; i < response.datarows.length; i=i+2) {
+			var row1 = response.datarows[i];
+			var row2 = response.datarows[i+1];
+			if(row2){
+				$("#article").append(""+
+					"<div class='row'>"+
+						"<div class='col-sm'>"+getRow(row1)+
+					    '</div>'+
+						"<div class='col-sm'>"+getRow(row2)+
+						'</div>'+
+					'</div>'+
+				"");
+			}else{
+				$("#article").append(""+
+					"<div class='row'>"+
+						"<div class='col-sm'>"+getRow(row1)+
+					    '</div>'+
+						"<div class='col-sm'>&nbsp;</div>"+
+					'</div>'+
+				"");
+			}
+		}
 	});
+}
+
+function getRow(row1){
+	return "<img src='"+row1.img+"' width='"+row1.imgw+"' height='"+row1.imgh+"''><br><a href='"+row1.href+"' target='_blank'>"+row1.title+"</a>";
 }
 </script>
 <body>
-	<button onClick="getData()">getdata</button><br/>
-	<table id="article">
-		<tr>
-			<td>item</td>
-		</tr>
-	</table>
+	<div class="container">
+		<nav class="navbar navbar-light bg-light">
+	  		<a class="navbar-brand">News</a>
+	    	<button class="btn btn-outline-success my-2 my-sm-0" onClick="getData()">取得最新資訊</button>
+		</nav>
+	</div>
+	<div class="container" id="article">
+	  <div class="row">
+	    <div class="col-sm">
+	    </div>
+	    <div class="col-sm">
+	    </div>
+	  </div>
+	</div>
 </body>
 </html>

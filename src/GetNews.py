@@ -28,23 +28,32 @@ for t in content:
         a = t2.find('a')
         row['title'] = a.text
         row['href'] = "https://www.ithome.com.tw/"+a.get('href')
-        datarows.append(row)
-        
+    photo = t.select(".photo")
+    for t2 in photo:
+        img = t2.find('img')
+        row['img'] = img.get('src')
+        row['imgw'] = img.get('width')
+        row['imgh'] = img.get('height')
+    datarows.append(row)
+
 url = "https://buzzorange.com/techorange"
 request = urllib.request.Request(url=url,headers=headers)
 response = urllib.request.urlopen(request)
 html_cont = response.read()
 soup = BeautifulSoup(html_cont,'html.parser', from_encoding='utf-8')
 
-content = soup.select('div .post--vertical-3i_row .post__title')
-for t in content:
+content = soup.select_one('div .atbs-ceris-block__inner.post--vertical-3i_row')
+list = content.select('div .list-item')
+for t in list:
     row = {}
-    a = t.find('a')
+    img = t.select_one(".post__thumb").find('img')
+    row['img'] = img.get('src')
+    row['imgw'] = img.get('width')
+    row['imgh'] = img.get('height')
+    a = t.select_one(".post__title").find('a')
     row['title'] = a.text
     row['href'] = a.get('href')
-    datarows.append(row)
-        
-
+    datarows.append(row)   
 
 #for row in datarows:
 #    print(row)
@@ -62,5 +71,5 @@ def reload(window):
         
 if __name__ == '__main__':
     api = Api()
-    window = webview.create_window('hello', htmlfileurl, js_api=api)
+    window = webview.create_window('News', htmlfileurl, js_api=api)
     webview.start(reload, window, http_server=True)
